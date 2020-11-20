@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import Maps from "./component/Maps";
 
 function App() {
+  const [loading, setloading] = useState(false);
+  const [mapData, setData] = useState([]);
+  useEffect(() => {
+    setloading(true);
+    fetch(
+      "https://api.agrihawk.in/api/devices/getMarkers?access_token=0DnJcoZVNNCjuORU2JpSzN57gdMAtYdeSWqe1Ri24Y87KLhhtYC3ZYMLaDYuJHss"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data => ", data);
+
+        setData(data);
+        setloading(false);
+      })
+      .catch((err) => console.log("err => ", err));
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h3>Maps</h3>
+      {loading ? <h3>Loading...</h3> : <Maps mapData={mapData} />}
+      {console.log("mapData => ", mapData)}
     </div>
   );
 }
